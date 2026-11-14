@@ -59,9 +59,9 @@ func runDesktop() error {
 		},
 	})
 	installWindowIcon(window)
-	openPicker := installQuickPresetPicker(app, confirmation)
+	openPicker, togglePicker := installQuickPresetPicker(app, confirmation)
 	app.Event.OnApplicationEvent(events.Common.ApplicationStarted, func(*application.ApplicationEvent) {
-		shortcut.bind(app.GlobalShortcut, openPicker, app.Logger)
+		shortcut.bind(app.GlobalShortcut, togglePicker, app.Logger)
 	})
 	showWindow := installTray(app, window, notice, openPicker)
 	// ApplicationStarted can fire before the hidden main window can be shown.

@@ -21,7 +21,7 @@ button { font: inherit; }
   padding: 15px 18px 12px;
   border: 1px solid rgb(190 199 190 / 42%);
   border-radius: 15px;
-  background: rgb(32 37 35 / 73%);
+  background: color-mix(in srgb, var(--graph) 88%, transparent);
   box-shadow: 0 5px 13px rgb(10 14 11 / 30%);
 }
 
