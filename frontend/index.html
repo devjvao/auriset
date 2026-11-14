@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Equalizador Kuba</title>
+  <title>Auriset</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./startup.css">
   <link rel="stylesheet" href="./preset-confirmation.css">
@@ -17,9 +17,9 @@
     <div class="masthead-inner">
       <div class="identity">
         <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-        <h1>Equalizador Kuba</h1>
+        <h1>Auriset</h1>
       </div>
-      <div class="workspace-tabs" role="tablist" aria-label="Telas do equalizador">
+      <div class="workspace-tabs" role="tablist" aria-label="Telas do Auriset">
         <button type="button" id="presets-tab" role="tab" aria-controls="presets-panel" aria-selected="true">Presets</button>
         <button type="button" id="settings-tab" role="tab" aria-controls="settings-page" aria-selected="false" tabindex="-1">Configurações</button>
         <button type="button" id="about-tab" role="tab" aria-controls="about-page" aria-selected="false" tabindex="-1">Sobre</button>
@@ -90,7 +90,7 @@
           <input id="windows-startup" type="checkbox" aria-describedby="startup-description" disabled>
           <span>
             <strong>Iniciar com o Windows</strong>
-            <span id="startup-description">Ao entrar no Windows, o equalizador fica na área de notificação, sem abrir a janela.</span>
+            <span id="startup-description">Ao entrar no Windows, o Auriset fica na área de notificação, sem abrir a janela.</span>
           </span>
         </label>
         <p class="startup-status" id="startup-status" role="status"></p>
@@ -112,9 +112,10 @@
     <div class="about-page" id="about-page" role="tabpanel" aria-labelledby="about-tab" tabindex="0" hidden>
       <section class="about-summary" aria-labelledby="about-title">
         <div class="about-heading">
-          <h2 id="about-title">Equalizador Kuba</h2>
+          <h2 id="about-title">Auriset</h2>
           <p class="about-version" id="app-version" hidden></p>
         </div>
+        <p>App não oficial para trocar os presets de equalização do cabo USB-C Kuba Auri no Windows.</p>
         <p>Veja as curvas de equalização do Auri e grave um dos 11 presets diretamente no DSP do cabo USB-C. O atalho global permite trocar de preset sem abrir a janela principal.</p>
       </section>
       <section class="credits-panel" aria-labelledby="credits-title">
@@ -156,8 +157,8 @@
   </div>
 
   <dialog class="tray-notice" id="tray-notice" aria-labelledby="tray-notice-title" aria-describedby="tray-notice-description tray-notice-instructions">
-    <h2 id="tray-notice-title">O equalizador continua aberto</h2>
-    <p id="tray-notice-description">Ao fechar a janela, o Equalizador Kuba fica na área de notificação, perto do relógio.</p>
+    <h2 id="tray-notice-title">O Auriset continua aberto</h2>
+    <p id="tray-notice-description">Ao fechar a janela, o Auriset fica na área de notificação, perto do relógio.</p>
     <p id="tray-notice-instructions">Clique no ícone para reabrir a janela. Para encerrar o aplicativo, clique com o botão direito no ícone e escolha <strong>Sair</strong>.</p>
     <p class="tray-notice-error" id="tray-notice-error" role="alert" hidden>Não foi possível confirmar o aviso. Tente novamente.</p>
     <div class="tray-notice-actions">

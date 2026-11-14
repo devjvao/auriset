@@ -32,7 +32,7 @@ button { font: inherit; }
   margin-bottom: 9px;
 }
 
-.kuba-mark {
+.picker-mark {
   display: flex;
   flex: 0 0 30px;
   align-items: center;
@@ -44,9 +44,9 @@ button { font: inherit; }
   background: rgb(241 189 85 / 8%);
 }
 
-.kuba-mark i { width: 2px; height: 6px; border-radius: 1px; background: var(--gold); }
-.kuba-mark i:nth-child(2), .kuba-mark i:nth-child(4) { height: 11px; }
-.kuba-mark i:nth-child(3) { height: 17px; }
+.picker-mark i { width: 2px; height: 6px; border-radius: 1px; background: var(--gold); }
+.picker-mark i:nth-child(2), .picker-mark i:nth-child(4) { height: 11px; }
+.picker-mark i:nth-child(3) { height: 17px; }
 
 .picker-header h1 {
   font-size: 21px;

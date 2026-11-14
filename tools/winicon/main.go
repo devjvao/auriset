@@ -19,7 +19,7 @@ func main() {
 }
 
 func generate() error {
-	dir := filepath.Join("..", "..", "cmd", "kuba-equalizer")
+	dir := filepath.Join("..", "..", "cmd", "auriset")
 	data, err := os.ReadFile(filepath.Join(dir, "tray.png"))
 	if err != nil {
 		return err

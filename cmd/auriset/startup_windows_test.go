@@ -9,7 +9,7 @@ import (
 )
 
 func TestWindowsStartupCommand(t *testing.T) {
-	executable := `C:\Program Files\Áudio Kuba\kuba-equalizer.exe`
+	executable := `C:\Program Files\Áudio Kuba\auriset.exe`
 	command, err := windowsStartupCommand(executable)
 	if err != nil {
 		t.Fatal(err)
@@ -42,10 +42,10 @@ func TestIsWindowsStartup(t *testing.T) {
 		args []string
 		want bool
 	}{
-		{name: "manual launch", args: []string{"kuba-equalizer.exe"}},
-		{name: "login launch", args: []string{"kuba-equalizer.exe", "--windows-startup"}, want: true},
+		{name: "manual launch", args: []string{"auriset.exe"}},
+		{name: "login launch", args: []string{"auriset.exe", "--windows-startup"}, want: true},
 		{name: "executable name alone", args: []string{"--windows-startup"}},
-		{name: "not the exact flag", args: []string{"kuba-equalizer.exe", "--windows-startup=no"}},
+		{name: "not the exact flag", args: []string{"auriset.exe", "--windows-startup=no"}},
 		{name: "no args"},
 	} {
 		t.Run(tt.name, func(t *testing.T) {

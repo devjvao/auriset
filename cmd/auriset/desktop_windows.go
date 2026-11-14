@@ -7,9 +7,9 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/application"
 	"github.com/wailsapp/wails/v3/pkg/events"
 
-	"kuba-equalizer/frontend"
-	"kuba-equalizer/internal/config"
-	"kuba-equalizer/internal/equalizer"
+	"auriset/frontend"
+	"auriset/internal/config"
+	"auriset/internal/equalizer"
 )
 
 func runDesktop() error {
@@ -19,7 +19,7 @@ func runDesktop() error {
 	// A second launch can arrive before Wails has created the main window.
 	reopen := make(chan struct{}, 1)
 	app := application.New(application.Options{
-		Name: "Kuba Equalizer",
+		Name: desktopTitle,
 		Icon: trayIcon,
 		SingleInstance: &application.SingleInstanceOptions{
 			UniqueID: "audio.kuba.equalizer",

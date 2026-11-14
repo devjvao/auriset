@@ -4,18 +4,19 @@
 #ifndef NumericVersion
   #define NumericVersion "0.1.0"
 #endif
-#define AppExe "kuba-equalizer.exe"
+#define AppExe "auriset.exe"
 #define Bootstrapper "MicrosoftEdgeWebview2Setup.exe"
 
 [Setup]
 AppId=audio.kuba.equalizer
-AppName=Equalizador Kuba
+AppName=Auriset
 AppVersion={#AppVersion}
+AppComments=App não oficial para trocar os presets de equalização do cabo USB-C Kuba Auri no Windows.
 AppPublisher=João Vitor
 AppPublisherURL=https://devjvao.com/
-AppUpdatesURL=https://github.com/devjvao/kuba-equalizer/releases
+AppUpdatesURL=https://github.com/devjvao/auriset/releases
 AppMutex=wails-app-audio.kuba.equalizer-sim
-DefaultDirName={localappdata}\Programs\Equalizador Kuba
+DefaultDirName={localappdata}\Programs\Auriset
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 MinVersion=10.0
@@ -26,7 +27,7 @@ UninstallDisplayIcon={app}\{#AppExe}
 VersionInfoVersion={#NumericVersion}
 VersionInfoTextVersion={#AppVersion}
 OutputDir=..\build\bin
-OutputBaseFilename=kuba-equalizer-setup-windows-amd64
+OutputBaseFilename=auriset-setup-windows-amd64
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -43,13 +44,13 @@ WebView2InstallError=Não foi possível instalar o Microsoft Edge WebView2 Runti
 
 [Files]
 Source: "..\build\bin\{#Bootstrapper}"; Flags: dontcopy
-Source: "..\build\bin\kuba-equalizer-windows-amd64.exe"; DestDir: "{app}"; DestName: "{#AppExe}"; Flags: ignoreversion
+Source: "..\build\bin\auriset-windows-amd64.exe"; DestDir: "{app}"; DestName: "{#AppExe}"; Flags: ignoreversion
 
 [Icons]
-Name: "{userprograms}\Equalizador Kuba"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
+Name: "{userprograms}\Auriset"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,Equalizador Kuba}"; Flags: postinstall nowait skipifsilent unchecked
+Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,Auriset}"; Flags: postinstall nowait skipifsilent unchecked
 
 [Code]
 const
@@ -57,6 +58,12 @@ const
   StartupKey = 'Software\Microsoft\Windows\CurrentVersion\Run';
   StartupName = 'Kuba Equalizer';
   StartupArg = ' --windows-startup';
+
+function StartupTargets(const Command, Exe: String): Boolean;
+begin
+  Result := SameText(Command, '"' + Exe + '"' + StartupArg) or
+    SameText(Command, Exe + StartupArg);
+end;
 
 function WebView2VersionExists(RootKey: Integer): Boolean;
 var
@@ -93,6 +100,34 @@ begin
     Result := CustomMessage('WebView2InstallError');
 end;
 
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  Command, InstalledExe, OldExe, OldShortcut: String;
+begin
+  if CurStep <> ssPostInstall then
+    Exit;
+
+  InstalledExe := ExpandConstant('{app}\{#AppExe}');
+  OldExe := ExpandConstant('{app}\kuba-equalizer.exe');
+  if not FileExists(InstalledExe) or not FileExists(OldExe) then
+    Exit;
+
+  { Redirect only the startup entry for this installation; leave a portable copy alone. }
+  if RegQueryStringValue(HKCU, StartupKey, StartupName, Command) and
+    StartupTargets(Command, OldExe) and
+    not RegWriteStringValue(HKCU, StartupKey, StartupName, '"' + InstalledExe + '"' + StartupArg) then
+  begin
+    Log('Could not migrate the Windows startup entry; retaining the previous executable.');
+    Exit;
+  end;
+
+  if not DeleteFile(OldExe) then
+    Log('Could not remove the previous executable: ' + OldExe);
+  OldShortcut := ExpandConstant('{userprograms}\Equalizador Kuba.lnk');
+  if FileExists(OldShortcut) and not DeleteFile(OldShortcut) then
+    Log('Could not remove the old Start menu shortcut: ' + OldShortcut);
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   Command, InstalledExe: String;
@@ -102,7 +137,6 @@ begin
 
   InstalledExe := ExpandConstant('{app}\{#AppExe}');
   if RegQueryStringValue(HKCU, StartupKey, StartupName, Command) and
-    (SameText(Command, '"' + InstalledExe + '"' + StartupArg) or
-     SameText(Command, InstalledExe + StartupArg)) then
+    StartupTargets(Command, InstalledExe) then
     RegDeleteValue(HKCU, StartupKey, StartupName);
 end;

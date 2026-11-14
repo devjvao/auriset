@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"kuba-equalizer/internal/config"
+	"auriset/internal/config"
 )
 
 type openCable func() (io.WriteCloser, error)
