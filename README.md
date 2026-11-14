@@ -21,6 +21,22 @@ The **Sobre** tab displays `0.1.0-dev` by default. Set `-X main.appVersion=0.1.0
 
 For a Windows smoke test, open the built executable, check cable detection and the graph, then apply a preset from the main window and from the picker. Check that the picker restores focus and shows its confirmation, the tray and second launch reopen the app, and shortcut and apply history persist after **Sair** and relaunch. On a test account, enable Windows startup and sign out and back in to check that the app starts in the tray.
 
+## Publish a Windows release
+
+Tag the commit you want to release and push the tag to GitHub. For example, from an up-to-date `main`:
+
+```powershell
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+```
+
+The [release workflow](.github/workflows/release.yml) tests the app, stamps the tag version into **Sobre**, and publishes these Windows x64 assets, each with a `.sha256` checksum:
+
+- `kuba-equalizer-setup-windows-amd64.exe`: Brazilian Portuguese installer. It installs for the current user without requiring admin rights, creates a Start menu shortcut, and runs the bundled Microsoft WebView2 bootstrapper only if the runtime is missing. The bootstrapper requires Internet access.
+- `kuba-equalizer-windows-amd64.exe`: portable executable. Run it directly on a PC with the WebView2 Runtime installed.
+
+To upgrade or uninstall, choose **Sair** from the tray menu first. The installer preserves settings and preset history. Uninstall removes the Windows startup entry only if it points to the installed copy. Tags like `v0.1.0-rc.1` publish prereleases. The portable executable and installer are currently unsigned.
+
 ## Project layout
 
 | Path | Responsibility |
@@ -29,8 +45,9 @@ For a Windows smoke test, open the built executable, check cable detection and t
 | `internal/equalizer` | Preset data, graph calculations, cable report encoding, write orchestration, and last-applied history. The Windows HID adapter finds the Auri and handles native report I/O. |
 | `internal/config` | Shared application settings directory and file replacement. |
 | `frontend` | Bundled HTML, CSS, and JavaScript for the main window, picker, and confirmation. |
+| `installer` | Brazilian Portuguese Inno Setup definition for the Windows installer. |
 | `tools/winicon` | Build-only Go module that generates the Windows icon resources from the tray artwork. |
-| `build/bin` | Generated executable. |
+| `build/bin` | Generated Windows release assets. |
 
 The desktop wiring passes configuration paths and the Windows HID implementation to the equalizer. The frontend uses Wails bindings; preserve their method names and JSON fields when moving code. Plot curves and DSP reports are separate outputs, each covered by reference tests.
 

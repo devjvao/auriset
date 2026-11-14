@@ -1,0 +1,89 @@
+name: Windows release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+
+concurrency:
+  group: release-${{ github.ref }}
+
+jobs:
+  release:
+    if: ${{ !github.event.deleted }}
+    runs-on: windows-2025
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Read version from tag
+        id: version
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $number = '(?:0|[1-9][0-9]*)'
+          $identifier = "(?:$number|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)"
+          $pattern = "^v(?<core>$number\.$number\.$number)(?<prerelease>-$identifier(?:\.$identifier)*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?$"
+          if ($tag -cnotmatch $pattern) {
+            throw 'Expected a version tag such as v0.1.0 or v0.1.0-rc.1.'
+          }
+          $prerelease = $Matches.ContainsKey('prerelease')
+          "version=$($tag.Substring(1))" >> $env:GITHUB_OUTPUT
+          "numeric-version=$($Matches['core'])" >> $env:GITHUB_OUTPUT
+          "prerelease=$($prerelease.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Test Windows app
+        run: go test -tags production ./...
+
+      - name: Build Windows x64 executable
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
+          CGO_ENABLED: '0'
+          GOARCH: amd64
+        run: go build -tags production -trimpath -ldflags "-H windowsgui -X main.appVersion=$env:APP_VERSION" -o build/bin/kuba-equalizer-windows-amd64.exe ./cmd/kuba-equalizer
+
+      - name: Build pt-BR installer
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
+          NUMERIC_VERSION: ${{ steps.version.outputs.numeric-version }}
+        run: |
+          $compiler = Get-Command ISCC.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+          $iscc = if ($compiler) { $compiler.Source } else { "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" }
+          if (-not (Test-Path -LiteralPath $iscc -PathType Leaf)) { throw 'Inno Setup compiler (ISCC.exe) not found.' }
+
+          $bootstrapper = 'build/bin/MicrosoftEdgeWebview2Setup.exe'
+          Invoke-WebRequest -Uri 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $bootstrapper
+          $signature = Get-AuthenticodeSignature -LiteralPath $bootstrapper
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '^CN=Microsoft Corporation,') {
+            throw 'The WebView2 bootstrapper does not have a valid Microsoft signature.'
+          }
+
+          & $iscc "/DAppVersion=$env:APP_VERSION" "/DNumericVersion=$env:NUMERIC_VERSION" 'installer/kuba-equalizer.iss'
+
+      - name: Generate SHA-256 checksums
+        working-directory: build/bin
+        run: |
+          foreach ($name in 'kuba-equalizer-windows-amd64.exe', 'kuba-equalizer-setup-windows-amd64.exe') {
+            $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $name).Hash.ToLowerInvariant()
+            "$hash  $name" | Set-Content -Encoding ascii -LiteralPath "$name.sha256"
+          }
+
+      - name: Publish GitHub release
+        working-directory: build/bin
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+        run: |
+          $portable = 'kuba-equalizer-windows-amd64.exe'
+          $installer = 'kuba-equalizer-setup-windows-amd64.exe'
+          $releaseArgs = @('--repo', $env:GITHUB_REPOSITORY, '--verify-tag', '--generate-notes')
+          if ($env:PRERELEASE -eq 'true') {
+            $releaseArgs += @('--prerelease', '--latest=false')
+          }
+          gh release create $env:GITHUB_REF_NAME $portable "$portable.sha256" $installer "$installer.sha256" @releaseArgs
