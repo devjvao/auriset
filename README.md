@@ -12,6 +12,11 @@ go vet -tags production ./...
 go build -tags production -trimpath -ldflags='-H windowsgui' -o build/bin/kuba-equalizer.exe ./cmd/kuba-equalizer
 ```
 
+[GitHub Actions](.github/workflows/ci.yml) runs the Windows build, vet, lint,
+race tests, and vulnerability scan on pushes to `main` and pull requests
+targeting `main`. To run the race tests locally, set `CGO_ENABLED=1` and use a
+recent MinGW-w64 GCC.
+
 The **Sobre** tab displays `0.1.0-dev` by default. Set `-X main.appVersion=0.1.0` alongside `-H windowsgui` to stamp a release build with its version. Regenerate the Windows icon resources with `go generate ./cmd/kuba-equalizer` after changing `cmd/kuba-equalizer/tray.png`.
 
 For a Windows smoke test, open the built executable, check cable detection and the graph, then apply a preset from the main window and from the picker. Check that the picker restores focus and shows its confirmation, the tray and second launch reopen the app, and shortcut and apply history persist after **Sair** and relaunch. On a test account, enable Windows startup and sign out and back in to check that the app starts in the tray.
