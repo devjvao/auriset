@@ -1,0 +1,145 @@
+.settings-page, .about-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 26px 38px 34px;
+}
+
+.settings-panel, .about-summary, .credits-panel {
+  padding: 17px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.settings-panel h2, .credits-panel h2 {
+  margin-bottom: 10px;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.about-summary { margin-bottom: 18px; }
+.about-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 8px; }
+.about-heading h2 { font-size: 22px; font-weight: 650; letter-spacing: -0.03em; }
+.about-summary > p { max-width: 60ch; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.about-version { color: var(--gold); font: 12px/1.4 Consolas, monospace; }
+
+.startup-setting {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.startup-setting input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  accent-color: var(--gold);
+}
+
+.startup-setting input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.startup-setting:has(input:disabled) { cursor: default; }
+.startup-setting strong { display: block; font-weight: 650; }
+#startup-description { display: block; margin-top: 2px; color: var(--muted); }
+.startup-status:not(:empty) { margin-top: 8px; color: var(--danger); font-size: 13px; }
+
+.shortcut-setting {
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) auto;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.shortcut-info strong { display: block; font-weight: 650; }
+.shortcut-info span { display: block; margin-top: 2px; color: var(--muted); }
+.shortcut-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.shortcut-controls kbd,
+.shortcut-controls button {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.shortcut-controls kbd { background: var(--background); color: var(--gold); font: 12px/1.4 Consolas, monospace; }
+.shortcut-controls button { background: var(--surface-raised); color: var(--ink); cursor: pointer; font-size: 12px; }
+.shortcut-controls button:hover:not(:disabled) { border-color: var(--gold-edge); }
+.shortcut-controls button:disabled { color: var(--muted); cursor: default; }
+.shortcut-status { grid-column: 1 / -1; color: var(--muted); }
+.shortcut-status:empty { margin-top: -6px; }
+.shortcut-status[data-error] { color: var(--danger); }
+
+.credits-panel p { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.credit-group h3 { margin: 0 0 5px; font-size: 14px; font-weight: 650; }
+.credit-group + .credit-group { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.credits-panel ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.credits-panel a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-size: 13px;
+  text-decoration: none;
+}
+.credits-panel a img { flex: none; object-fit: contain; }
+.credits-panel a:hover { border-color: var(--gold-edge); color: var(--gold-hover); }
+.credits-panel a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.credits-panel .credits-status:not(:empty) { margin-top: 10px; color: var(--danger); }
+
+.shortcut-toast {
+  position: fixed;
+  z-index: 3;
+  inset-inline-end: 16px;
+  inset-block-end: 16px;
+  pointer-events: none;
+}
+
+.shortcut-toast:not(:empty) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  border: 1px solid var(--gold-edge);
+  border-radius: 8px;
+  background: var(--surface-raised);
+  color: var(--ink);
+  box-shadow: 0 3px 12px rgb(0 0 0 / 40%);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.shortcut-toast:not(:empty)::before {
+  content: '';
+  width: 6px;
+  height: 11px;
+  border: solid var(--gold);
+  border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+@media (max-width: 850px) {
+  .settings-page, .about-page { padding: 22px 24px 28px; }
+  .settings-panel, .about-summary, .credits-panel { padding-inline: 15px; }
+  .shortcut-setting { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 620px) {
+  .settings-page, .about-page { padding: 16px; }
+}

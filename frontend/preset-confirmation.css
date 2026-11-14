@@ -1,0 +1,47 @@
+:root {
+  color-scheme: dark;
+  --graph: #202523;
+  --ink: #f5f3ed;
+  --muted: #c3c9c2;
+  --gold: #f1bd55;
+  font: 14px/1.35 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  color: var(--ink);
+  background: transparent;
+}
+
+*, *::before { box-sizing: border-box; }
+body { display: grid; align-items: center; min-height: 100vh; margin: 0; padding: 8px 10px; }
+p { margin: 0; }
+
+.confirmation {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 16px;
+  border: 1px solid rgb(190 199 190 / 42%);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--graph) 94%, transparent);
+  box-shadow: 0 3px 8px rgb(10 14 11 / 30%);
+}
+.confirmation[hidden] { display: none; }
+
+.confirmation-mark {
+  display: grid;
+  flex: 0 0 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgb(241 189 85 / 35%);
+  border-radius: 8px;
+  background: rgb(241 189 85 / 12%);
+}
+.confirmation-mark::before {
+  width: 8px;
+  height: 14px;
+  border: solid var(--gold);
+  border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg);
+  content: '';
+}
+
+.confirmation-label { color: var(--muted); font-size: 12px; }
+.preset-name { font-size: 20px; font-weight: 650; letter-spacing: -0.025em; }
