@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Equalizador Kuba</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./startup.css">
+  <script type="module" src="./app.js"></script>
+  <script type="module" src="./startup.js"></script>
+  <script type="module" src="./shortcut.js"></script>
+  <script type="module" src="./navigation.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="identity">
+        <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        <h1>Equalizador Kuba</h1>
+      </div>
+      <div class="workspace-tabs" role="tablist" aria-label="Telas do equalizador">
+        <button type="button" id="presets-tab" role="tab" aria-controls="presets-panel" aria-selected="true">Presets</button>
+        <button type="button" id="settings-tab" role="tab" aria-controls="settings-page" aria-selected="false" tabindex="-1">Configurações</button>
+        <button type="button" id="about-tab" role="tab" aria-controls="about-page" aria-selected="false" tabindex="-1">Sobre</button>
+      </div>
+      <div class="cable">
+        <span class="cable-name">Auri USB-C com DSP</span>
+        <span class="connection" id="connection" data-state="checking" role="status">
+          <span class="connection-dot" aria-hidden="true"></span>
+          <span id="connection-label">Verificando cabo</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="workspace" id="presets-panel" role="tabpanel" aria-labelledby="presets-tab" tabindex="0">
+      <aside class="catalogue" aria-labelledby="presets-title">
+        <h2 id="presets-title">Presets</h2>
+        <p id="preset-feedback" class="preset-feedback" role="status">Carregando presets…</p>
+        <div id="preset-groups" class="preset-groups" hidden></div>
+      </aside>
+
+      <div class="detail">
+        <section class="response" aria-labelledby="preset-title">
+          <div class="response-heading">
+            <div>
+              <h2 id="preset-title">Prévia do preset</h2>
+              <p id="preset-description"></p>
+            </div>
+            <div class="preamp" id="preamp" hidden>
+              <span>Pré-amplificação do cabo</span>
+              <span class="preamp-value" id="preamp-value"></span>
+            </div>
+          </div>
+          <div class="plot">
+            <div class="plot-heading">
+              <div class="plot-legend">
+                <span><i class="trace-swatch" aria-hidden="true"></i>Resposta do Auri (dB relativos)</span>
+                <span id="reference-legend" hidden><i class="trace-swatch reference-swatch" aria-hidden="true"></i><span id="reference-name"></span></span>
+              </div>
+              <output id="chart-reading" aria-hidden="true"></output>
+            </div>
+            <canvas id="response-chart" role="img" aria-label="Resposta em frequência estimada do Auri e curva-alvo, em decibéis relativos"></canvas>
+          </div>
+        </section>
+
+        <section class="apply-panel" aria-labelledby="apply-title">
+          <div class="apply-info">
+            <h2 id="apply-title">Gravar no cabo</h2>
+            <p>O preset selecionado substitui a equalização gravada no cabo.</p>
+          </div>
+          <button class="apply-button" id="apply-button" type="button" disabled>Aplicar preset</button>
+          <div class="write-details">
+            <div class="device-history">
+              <span>Último aplicado pelo app <strong id="last-applied">Consultando…</strong></span>
+            </div>
+            <p id="write-feedback" role="status" class="write-feedback" hidden></p>
+            <p id="cable-feedback" class="write-feedback" hidden></p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="settings-page" id="settings-page" role="tabpanel" aria-labelledby="settings-tab" tabindex="0" hidden>
+      <section class="settings-panel" aria-labelledby="settings-title">
+        <h2 id="settings-title">Configurações</h2>
+        <label class="startup-setting">
+          <input id="windows-startup" type="checkbox" aria-describedby="startup-description" disabled>
+          <span>
+            <strong>Iniciar com o Windows</strong>
+            <span id="startup-description">Ao entrar no Windows, o equalizador fica na área de notificação, sem abrir a janela.</span>
+          </span>
+        </label>
+        <p class="startup-status" id="startup-status" role="status"></p>
+        <div class="shortcut-setting">
+          <div class="shortcut-info">
+            <strong id="shortcut-label">Atalho de presets</strong>
+            <span id="shortcut-description">Abre a lista de presets em qualquer aplicativo.</span>
+          </div>
+          <div class="shortcut-controls" role="group" aria-labelledby="shortcut-label">
+            <kbd id="shortcut-current">Consultando…</kbd>
+            <button id="shortcut-edit" type="button" aria-describedby="shortcut-description shortcut-status" disabled>Alterar</button>
+            <button id="shortcut-reset" type="button" disabled>Restaurar padrão</button>
+          </div>
+          <p class="shortcut-status" id="shortcut-status" role="status"></p>
+        </div>
+      </section>
+    </div>
+
+    <div class="about-page" id="about-page" role="tabpanel" aria-labelledby="about-tab" tabindex="0" hidden>
+      <section class="about-summary" aria-labelledby="about-title">
+        <div class="about-heading">
+          <h2 id="about-title">Equalizador Kuba</h2>
+          <p class="about-version" id="app-version" hidden></p>
+        </div>
+        <p>Veja as curvas de equalização do Auri e grave um dos 11 presets diretamente no DSP do cabo USB-C. O atalho global permite trocar de preset sem abrir a janela principal.</p>
+      </section>
+      <section class="credits-panel" aria-labelledby="credits-title">
+        <h2 id="credits-title">Créditos</h2>
+        <div id="credits-links">
+          <div class="credit-group">
+            <h3>Criação e desenvolvimento</h3>
+            <p>Olá! Sou o João Vitor. Criei esse aplicativo para facilitar o uso dos presets do Auri no Windows.</p>
+            <ul>
+              <li><a href="https://devjvao.com/" target="_blank" rel="noopener noreferrer"><img src="./credit-icons/devjvao.png" alt="" width="18" height="18">Meu site</a></li>
+              <li><a href="https://github.com/devjvao" target="_blank" rel="noopener noreferrer"><img src="./credit-icons/github.svg" alt="" width="18" height="18">GitHub</a></li>
+            </ul>
+          </div>
+          <div class="credit-group">
+            <h3>Kuba Audio</h3>
+            <p>O equalizador original da Kuba Audio para o Auri inspirou este aplicativo.</p>
+            <ul>
+              <li><a href="https://equalizador.kuba.audio/" target="_blank" rel="noopener noreferrer"><img src="./credit-icons/kuba.png" alt="" width="18" height="18">Equalizador original</a></li>
+              <li><a href="https://kuba.audio/" target="_blank" rel="noopener noreferrer"><img src="./credit-icons/kuba.png" alt="" width="18" height="18">Site oficial</a></li>
+              <li><a href="https://www.youtube.com/@MINDTHEHEADPHONE" target="_blank" rel="noopener noreferrer"><img src="./credit-icons/youtube.png" alt="" width="18" height="18">Mind the Headphone</a></li>
+            </ul>
+          </div>
+        </div>
+        <p id="credits-status" class="credits-status" role="status"></p>
+      </section>
+    </div>
+  </main>
+
+  <p class="shortcut-toast" id="shortcut-toast" role="status" aria-atomic="true"></p>
+
+  <dialog class="tray-notice" id="tray-notice" aria-labelledby="tray-notice-title" aria-describedby="tray-notice-description tray-notice-instructions">
+    <h2 id="tray-notice-title">O equalizador continua aberto</h2>
+    <p id="tray-notice-description">Ao fechar a janela, o Equalizador Kuba fica na área de notificação, perto do relógio.</p>
+    <p id="tray-notice-instructions">Clique no ícone para reabrir a janela. Para encerrar o aplicativo, clique com o botão direito no ícone e escolha <strong>Sair</strong>.</p>
+    <p class="tray-notice-error" id="tray-notice-error" role="alert" hidden>Não foi possível confirmar o aviso. Tente novamente.</p>
+    <div class="tray-notice-actions">
+      <button class="apply-button" id="tray-notice-confirm" type="button" autofocus>Entendi</button>
+    </div>
+  </dialog>
+</body>
+</html>
