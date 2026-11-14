@@ -111,7 +111,7 @@ function refreshCable() {
 }
 
 async function onOpen() {
-  if (closing) opening++;
+  opening++;
   closing = false;
   if (!writing) result = undefined;
   cable = { state: 'checking' };

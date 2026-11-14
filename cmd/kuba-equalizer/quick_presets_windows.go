@@ -8,7 +8,7 @@ import (
 
 var setForegroundWindow = windows.NewLazySystemDLL("user32.dll").NewProc("SetForegroundWindow")
 
-func installQuickPresetPicker(app *application.App, confirmation *PresetConfirmation) func() {
+func installQuickPresetPicker(app *application.App, confirmation *PresetConfirmation) (open, toggle func()) {
 	picker := app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Name:           "quick-presets",
 		Title:          "Presets rápidos",
@@ -46,9 +46,17 @@ func installQuickPresetPicker(app *application.App, confirmation *PresetConfirma
 		application.InvokeSync(dismissPicker)
 	})
 
-	openPicker := func() {
+	showPicker := func(toggle bool) {
 		application.InvokeSync(func() {
 			if app.Context().Err() != nil {
+				return
+			}
+			if picker.IsVisible() {
+				if toggle {
+					dismissPicker()
+				} else {
+					picker.Focus()
+				}
 				return
 			}
 			foreground := windows.GetForegroundWindow()
@@ -62,5 +70,5 @@ func installQuickPresetPicker(app *application.App, confirmation *PresetConfirma
 			picker.EmitEvent("quick-presets:opened")
 		})
 	}
-	return openPicker
+	return func() { showPicker(false) }, func() { showPicker(true) }
 }
