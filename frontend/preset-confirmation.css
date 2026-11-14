@@ -1,4 +1,5 @@
-:root {
+.confirmation-window,
+.main-confirmation {
   color-scheme: dark;
   --graph: #202523;
   --ink: #f5f3ed;
@@ -6,12 +7,20 @@
   --gold: #f1bd55;
   font: 14px/1.35 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
   color: var(--ink);
-  background: transparent;
 }
 
-*, *::before { box-sizing: border-box; }
-body { display: grid; align-items: center; min-height: 100vh; margin: 0; padding: 8px 10px; }
-p { margin: 0; }
+.confirmation-window { display: grid; align-items: center; min-height: 100vh; margin: 0; padding: 8px 10px; box-sizing: border-box; background: transparent; }
+.confirmation p { margin: 0; }
+
+.main-confirmation {
+  position: fixed;
+  z-index: 4;
+  inset-inline-end: 16px;
+  inset-block-end: 16px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  pointer-events: none;
+}
 
 .confirmation {
   display: flex;
@@ -24,8 +33,10 @@ p { margin: 0; }
   box-shadow: 0 3px 8px rgb(10 14 11 / 30%);
 }
 .confirmation[hidden] { display: none; }
+.confirmation > div { min-width: 0; overflow-wrap: anywhere; }
 
 .confirmation-mark {
+  box-sizing: border-box;
   display: grid;
   flex: 0 0 34px;
   height: 34px;
@@ -35,6 +46,7 @@ p { margin: 0; }
   background: rgb(241 189 85 / 12%);
 }
 .confirmation-mark::before {
+  box-sizing: border-box;
   width: 8px;
   height: 14px;
   border: solid var(--gold);

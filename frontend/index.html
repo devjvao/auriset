@@ -6,6 +6,7 @@
   <title>Equalizador Kuba</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./startup.css">
+  <link rel="stylesheet" href="./preset-confirmation.css">
   <script type="module" src="./app.js"></script>
   <script type="module" src="./startup.js"></script>
   <script type="module" src="./shortcut.js"></script>
@@ -143,6 +144,16 @@
   </main>
 
   <p class="shortcut-toast" id="shortcut-toast" role="status" aria-atomic="true"></p>
+
+  <div class="main-confirmation" role="status" aria-atomic="true">
+    <div class="confirmation" id="apply-confirmation" hidden>
+      <span class="confirmation-mark" aria-hidden="true"></span>
+      <div>
+        <p class="confirmation-label">Preset aplicado</p>
+        <p class="preset-name" id="apply-confirmation-name"></p>
+      </div>
+    </div>
+  </div>
 
   <dialog class="tray-notice" id="tray-notice" aria-labelledby="tray-notice-title" aria-describedby="tray-notice-description tray-notice-instructions">
     <h2 id="tray-notice-title">O equalizador continua aberto</h2>

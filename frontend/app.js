@@ -17,6 +17,8 @@ const ui = {
   apply: element('apply-button'),
   lastApplied: element('last-applied'),
   writeFeedback: element('write-feedback'),
+  confirmation: element('apply-confirmation'),
+  confirmationName: element('apply-confirmation-name'),
   chart: element('response-chart'),
   referenceLegend: element('reference-legend'),
   referenceName: element('reference-name'),
@@ -78,6 +80,7 @@ let statusRequest;
 let writing = false;
 let lastAppliedRevision = 0;
 let lastAppliedLoaded = false;
+let confirmationTimer;
 
 async function refreshLastApplied() {
   const revision = ++lastAppliedRevision;
@@ -188,19 +191,33 @@ function setWriteFeedback(message, error = false) {
   ui.writeFeedback.toggleAttribute('data-error', error);
 }
 
+function hideApplyConfirmation() {
+  window.clearTimeout(confirmationTimer);
+  ui.confirmation.hidden = true;
+}
+
+function showApplyConfirmation(name) {
+  ui.confirmationName.textContent = name;
+  ui.confirmation.hidden = false;
+  confirmationTimer = window.setTimeout(hideApplyConfirmation, 2200);
+}
+
 async function applySelected() {
   if (writing || !selected || cable.state !== 'connected') return;
   const preset = selected;
   writing = true;
   updateApplyButton();
   setWriteFeedback('');
+  hideApplyConfirmation();
   try {
     await statusRequest;
     if (cable.state !== 'connected') return;
     const result = await equalizer.applyPreset(preset.id);
     void refreshLastApplied();
-    const historyWarning = result.historySaved === false ? ' Não foi possível salvar o histórico.' : '';
-    setWriteFeedback(`Preset ${result.name} enviado ao cabo.${historyWarning}`);
+    if (result.historySaved === false) {
+      setWriteFeedback('Não foi possível salvar o histórico.', true);
+    }
+    showApplyConfirmation(result.name);
   } catch (error) {
     setWriteFeedback(`Não foi possível enviar o preset ${preset.name}. ${applyErrorDetail(error)}`, true);
   } finally {
