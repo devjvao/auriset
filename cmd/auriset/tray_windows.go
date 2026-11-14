@@ -8,7 +8,7 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/events"
 )
 
-const desktopTitle = "Equalizador Kuba"
+const desktopTitle = "Auriset"
 
 //go:embed tray.png
 var trayIcon []byte
@@ -48,7 +48,7 @@ func installTray(app *application.App, window *application.WebviewWindow, notice
 	}
 	tray.OnClick(showWindow)
 	menu := app.NewMenu()
-	menu.Add("Abrir equalizador").OnClick(func(*application.Context) { showWindow() })
+	menu.Add("Abrir " + desktopTitle).OnClick(func(*application.Context) { showWindow() })
 	menu.Add("Presets rápidos").OnClick(func(*application.Context) { openPicker() })
 	menu.Add("Sair").OnClick(func(*application.Context) {
 		quitting.Store(true)

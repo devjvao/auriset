@@ -11,7 +11,7 @@ var setForegroundWindow = windows.NewLazySystemDLL("user32.dll").NewProc("SetFor
 func installQuickPresetPicker(app *application.App, confirmation *PresetConfirmation) (open, toggle func()) {
 	picker := app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Name:           "quick-presets",
-		Title:          "Presets rápidos",
+		Title:          "Presets rápidos · " + desktopTitle,
 		URL:            "/quick-presets.html",
 		Width:          450,
 		Height:         500,

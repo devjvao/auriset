@@ -14,6 +14,7 @@ func Path(name string) string {
 		slog.Warn("could not locate user configuration directory", "error", err)
 		return ""
 	}
+	// Keep settings and preset history written by the original release.
 	return filepath.Join(dir, "Kuba Equalizer", name)
 }
 

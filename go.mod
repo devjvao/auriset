@@ -1,4 +1,4 @@
-module kuba-equalizer
+module auriset
 
 go 1.26.0
 

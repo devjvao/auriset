@@ -6,7 +6,7 @@ import (
 )
 
 func TestTrayNoticeAcknowledgmentSurvivesRestart(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "kuba-equalizer", "tray-notice-acknowledged")
+	path := filepath.Join(t.TempDir(), "auriset", "tray-notice-acknowledged")
 	var shown, hidden int
 	show := func() { shown++ }
 	hide := func() { hidden++ }

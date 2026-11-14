@@ -1,4 +1,4 @@
-module kuba-equalizer/tools/winicon
+module auriset/tools/winicon
 
 go 1.26.0
 

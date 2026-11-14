@@ -46,7 +46,7 @@ jobs:
           APP_VERSION: ${{ steps.version.outputs.version }}
           CGO_ENABLED: '0'
           GOARCH: amd64
-        run: go build -tags production -trimpath -ldflags "-H windowsgui -X main.appVersion=$env:APP_VERSION" -o build/bin/kuba-equalizer-windows-amd64.exe ./cmd/kuba-equalizer
+        run: go build -tags production -trimpath -ldflags "-H windowsgui -X main.appVersion=$env:APP_VERSION" -o build/bin/auriset-windows-amd64.exe ./cmd/auriset
 
       - name: Build pt-BR installer
         env:
@@ -64,12 +64,12 @@ jobs:
             throw 'The WebView2 bootstrapper does not have a valid Microsoft signature.'
           }
 
-          & $iscc "/DAppVersion=$env:APP_VERSION" "/DNumericVersion=$env:NUMERIC_VERSION" 'installer/kuba-equalizer.iss'
+          & $iscc "/DAppVersion=$env:APP_VERSION" "/DNumericVersion=$env:NUMERIC_VERSION" 'installer/auriset.iss'
 
       - name: Generate SHA-256 checksums
         working-directory: build/bin
         run: |
-          foreach ($name in 'kuba-equalizer-windows-amd64.exe', 'kuba-equalizer-setup-windows-amd64.exe') {
+          foreach ($name in 'auriset-windows-amd64.exe', 'auriset-setup-windows-amd64.exe') {
             $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $name).Hash.ToLowerInvariant()
             "$hash  $name" | Set-Content -Encoding ascii -LiteralPath "$name.sha256"
           }
@@ -80,8 +80,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PRERELEASE: ${{ steps.version.outputs.prerelease }}
         run: |
-          $portable = 'kuba-equalizer-windows-amd64.exe'
-          $installer = 'kuba-equalizer-setup-windows-amd64.exe'
+          $portable = 'auriset-windows-amd64.exe'
+          $installer = 'auriset-setup-windows-amd64.exe'
           $releaseArgs = @('--repo', $env:GITHUB_REPOSITORY, '--verify-tag', '--generate-notes')
           if ($env:PRERELEASE -eq 'true') {
             $releaseArgs += @('--prerelease', '--latest=false')

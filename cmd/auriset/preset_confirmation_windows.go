@@ -42,7 +42,7 @@ func (c *PresetConfirmation) install(
 	c.dismissPicker = dismissPicker
 	c.window = app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Name:           "preset-confirmation",
-		Title:          "Preset aplicado",
+		Title:          "Preset aplicado · " + desktopTitle,
 		URL:            "/preset-confirmation.html",
 		Width:          confirmationWidth,
 		Height:         confirmationHeight,
